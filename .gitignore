@@ -1,4 +1,5 @@
-umap_env
+env
 visuals_old
 datasets
 data
+*.pkl

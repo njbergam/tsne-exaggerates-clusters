@@ -1,21 +1,13 @@
-Analyzing the robustness of the t-SNE data visualization method. 
+# t-SNE exaggerates clusters
 
-0_basics.ipynb
-+ running and analyzing the training dynamics of the t-SNE run on basic input affinity matrices
+0: Demo (0_demo.ipynb)
 
-1_false_positives.ipynb
-+ how t-sne and umap take highly ``unclustered'' data and depict it as clustered
+1: Impostor of PCMC3k Single-Cell Data (1_impostor_singleCell.ipynb)
 
-2_perturbation_stability.ipynb
-+ demonstrating the sensitivity of t-SNE outputs on high-aspect ratio
-+ exploring perturbation in both an average sense and an adversarial sense
+2: Adversarial Perturbations of Low-Aspect Ratio Data (2_adversarial.ipynb)
 
-3_outlier_behavior.ipynb
-+ witnessing how t-sne and umap misrepresent outliers
+3: Alpha-Outliers on Synthetic Data (3_outlier_synthetic.ipynb)
 
-functions.py
-+ contains many of the functions used throughout the demonstrations
+4: Alpha-Outliers re: Credit Fraud Identification (4_outlier_creditFraud.ipynb)
 
-
-To start the virtual environment (``umap_env'') use the following commands
-    source umap_env/bin/activate
+5: Poison Points vs Outlier Points on BBC News Data (5_outlier+poison_bbc.ipynb)

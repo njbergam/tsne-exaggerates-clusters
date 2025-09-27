@@ -24,6 +24,14 @@ import numpy as np
 MACHINE_EPSILON = np.finfo(np.double).eps
 
 
+# creates an epsilon-impostor
+def impostor(X, epsilon):
+    n = len(X)
+    distance_mx = squareform(pdist(X, metric='euclidean'))
+    blownup_distance_matrix = distance_mx * epsilon +  np.ones((n,n))- np.identity(n)
+    X_transformed = cMDS(blownup_distance_matrix, n-1)
+    return X_transformed
+
 def Hbeta(D=np.array([]), beta=1.0):
     """
         Compute the perplexity and the P-row for a specific value of the
@@ -339,6 +347,63 @@ def x2p(X=np.array([]), tol=1e-5, perplexity=30.0):
     P = np.array(P, dtype=np.float64)
     return P, sig
 
+
+#n needs to be divisible by 25
+def makeAmongUS(n, dim):
+    Xs = np.zeros((n, dim))
+    ptsPerShare = n/12.5
+    n1 = int(3*ptsPerShare)
+    n2 = int(2*ptsPerShare)
+    n3 = int(1.5*ptsPerShare)
+    n4 = int(1*ptsPerShare)
+    n5 = int(1*ptsPerShare)
+    n6 = int(1*ptsPerShare)
+    n7 = int(2*ptsPerShare)
+    #part 1
+    pts = np.linspace(0,2*np.pi, num=n1)
+    dataX = 0.5*np.cos(pts)+0.3
+    dataY = 0.25*np.sin(pts)+1
+    Xs[:n1,0]=dataX
+    Xs[:n1,1]=dataY
+    #part2
+    pts = np.linspace(0.116, 1, num=n2)
+    dataX = 0.5*np.cos(np.pi*pts)
+    dataY = 0.66*np.sin(np.pi*pts)+1
+    Xs[n1:n1+n2,0]=dataX
+    Xs[n1:n1+n2,1]=dataY
+    #part3
+    pts = np.linspace(0, 1, num=n3)
+    dataX = -0.5*np.ones(pts.shape)
+    dataY = pts
+    Xs[n1+n2:n1+n2+n3,0]=dataX
+    Xs[n1+n2:n1+n2+n3,1]=dataY
+    #part4
+    pts = np.linspace(0, 0.76, num=n4)
+    dataX = 0.47*np.ones(pts.shape)
+    dataY = pts
+    Xs[n1+n2+n3:n1+n2+n3+n4,0]=dataX
+    Xs[n1+n2+n3:n1+n2+n3+n4,1]=dataY
+    #part5
+    pts = np.linspace(0, 1, num=n5)
+    dataX = 0.25*np.cos(np.pi*pts)-0.25
+    dataY = -0.25*np.sin(np.pi*pts)
+    Xs[n1+n2+n3+n4:n1+n2+n3+n4+n5,0]=dataX
+    Xs[n1+n2+n3+n4:n1+n2+n3+n4+n5,1]=dataY
+    #part6
+    pts = np.linspace(0, 1, num=n6)
+    dataX = (0.47/2)*np.cos(np.pi*pts)+(0.47/2)
+    dataY = -(0.47/2)*np.sin(np.pi*pts)
+    Xs[n1+n2+n3+n4+n5:n1+n2+n3+n4+n5+n6,0]=dataX
+    Xs[n1+n2+n3+n4+n5:n1+n2+n3+n4+n5+n6,1]=dataY
+    #part7
+    pts = np.linspace(0, 1, num=n7)
+    dataX = 0.25*np.cos(np.pi*pts+np.pi/2)-0.5
+    dataY = 0.5*np.sin(np.pi*pts+np.pi/2)+0.5
+    Xs[n1+n2+n3+n4+n5+n6:n1+n2+n3+n4+n5+n6+n7,0]=dataX
+    Xs[n1+n2+n3+n4+n5+n6:n1+n2+n3+n4+n5+n6+n7,1]=dataY
+    plt.scatter(Xs[:,0], Xs[:,1])
+    plt.show()
+    return Xs
 
 def pca(X=np.array([]), no_dims=50):
     """
