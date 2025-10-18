@@ -1,6 +1,12 @@
 # t-SNE exaggerates clusters
+Exploring failure modes of t-SNE. Code for paper: https://arxiv.org/abs/2510.07746
 
 
+To run the code, please create a python virtual environment and install the requirements.
+
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 
 
 0: Demo (0_demo.ipynb)
