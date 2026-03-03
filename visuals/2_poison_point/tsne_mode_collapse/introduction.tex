@@ -1,0 +1,73 @@
+
+
+
+t-SNE \citep{van2008visualizing} and related data visualization methods have become staples in modern exploratory data analysis. They just seem to work: practitioners find that these techniques reliably tease out interesting cluster structures in datasets. Consequently they are now used ubiquitously in a wide array of fields, ranging from single-cell genomics to language model interpretability \citep{kobak2019art, petukhova2025text}. The practical success of these techniques has naturally piqued interest in the theoretical community as well. 
+
+Existing analysis of t-SNE has established that, given high-dimensional data with spherical, well-separated cluster structure, t-SNE outputs a visualization which preserves that cluster structure  \citep{arora2018analysis,linderman2019clustering}. In other words, t-SNE is provably good at generating \textit{true positives} in its visualization of clusters. 
+
+
+Curiously, a theoretical investigation of t-SNE's potential to generate \textit{false positives} (clustered plots despite un-clustered input) and \textit{false negatives} (un-clustered plots despite clustered input) has remained elusive. One should note that this is not a purely academic curiosity, since the interpretation of t-SNE outputs have important consequences downstream in the sciences, influencing hypothesis generation, experimental design, and scientific conclusions. %\textcolor{blue}{false parallelism?}. 
+
+
+
+
+As an illustration of t-SNE's potential to mislead, consider the visualizations produced by three example inputs in Figure~\ref{fig:tsne_demo}. {In the left column, a t-SNE plot depicts two salient clusters, despite the pairwise distances in the input being nearly uniform.} In the middle column, a t-SNE plot depicts an unstructured blob, whereas its corresponding input is easily partitioned into two salient clusters (with the exception of a single adversarially placed point). In the right column, a t-SNE plot shows two well-separated clusters, completely misrepresenting the outlying third of the input dataset. %t-SNE correctly identifies the cluster structure in part of the input, but incorrectly incorporates the rest of the input into that cluster structure.
+
+\begin{figure}[t!]
+%\centering\includegraphics[width=\linewidth]{images/0_2_demo.png}
+
+%\centering\includegraphics[width=\linewidth]{images/0_0_demo.png}
+
+%\centering\includegraphics[width=\linewidth]{images/0_1_demo.png}
+\centering\includegraphics[width=\textwidth]{images/demo/demo2.png}
+
+\caption{Some examples of how t-SNE may misrepresent cluster information in the input dataset.}
+  \label{fig:tsne_demo}
+\end{figure}
+
+%As an illustration of the potential danger of false positives \textcolor{blue}{potential for false positives? where is the danger?}, consider the 2D t-SNE visualization of a $100$-dimensional, $100$-point dataset (depicted in Figure \ref{fig:tsne_demo}). 
+
+
+%Based on this plot, it is tempting to conclude that the input dataset obviously\textcolor{blue}{is obvious needed?} contains two distinct clusters. In this case, one would likely design their subsequent data analysis workflow guided by the two \textcolor{red}{tight, well-separated } clusters they see. However a closer examination of the original (high-dimensional) dataset reveals that the situation perhaps may not be as clear-cut. By standard \textcolor{red}{distance-based} cluster saliency metrics, the input dataset \textcolor{red}{barely has any gap between the two clusters with respect} %to the partition that t-SNE so strongly suggests, see Table \ref{table:demo}.
+%\todo{Whats the difference between kNN and radius purity from a readers stand point. Do they really highlight different types of clustering?}
+
+%that perhaps the 100-point dataset contains two distinct clusters. In this case, understandably, our unsuspecting naive data analyst would design their subsequent data analysis workflow guided by the two salient clusters they see. But alas even a basic cluster saliency test of the original (high-dimensional) dataset reveals that these clusters are spurious.
+
+
+
+
+%The interpoint distance matrix further elucidates this discrepancy. t-SNE's two-dimensional visualization features a sizable separation between small intra-cluster and large inter-cluster distances. This separation is \textcolor{red}{significantly weaker} %{not present} 
+%in the original input data, where interpoint distances are near-uniform. \textcolor{red}{One should not take this to mean that t-SNE is \textit{fabricating} clusters but rather \textit{exaggerating} their separation. Indeed the last row of Table \ref{table:demo} indicates that the t-SNE visualization is consistent with the nearest-neighbor structure of the original data.}
+
+
+%\vspace{0.09in}
+
+Our work formalizes these and other limitations of t-SNE in terms of faithfully depicting distance-based information in the input. Our theoretical analysis, suffused with experiments, shows that one should take 
+%\st{highly-pronounced well-separated -- redundant? clusters depicted by} 
+t-SNE visualizations with a grain of salt. Our contributions are as follows.
+
+%More broadly, we are interested in to what extent we can rely on the outputs generated by such techniques. 
+
+%\pagebreak
+
+
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Misrepresentation of cluster salience:} We prove that \emph{any} well-clustered t-SNE visualization can be produced identically by both %\todo{Should mention that all datasets can be generated from an arbitrarily weakly clustered input.}
+    a strongly-separated, as well as  arbitrarily weakly-separated clustered datasets, 
+    %\textcolor{red}{[update this language]} %\footnote{According to standard metrics such as silhouette score.} 
+    %\st{can produce the exact same strongly-separated
+    %same maximally 
+    %clustered visualization},
+    %We find that input data which is arbitrarily \textit{un}-clustered (according to standard metrics such as silhouette score) can have maximally clustered visualizations
+    see Theorem \ref{thm:unclustHammer} and Corollary \ref{cor:twoCluster_n_Unclustered}. %Indeed, any visualization produced by t-SNE can be produced by an arbitrarily un-clustered dataset. 
+    Moreover, we prove that even a slight distance perturbation of inputs %arbitrarily close inputs 
+    can lead to vastly distinct visualizations, see Theorem \ref{thm:perturbhammer}. We identify the property of t-SNE that explains these peculiar behaviors, and use this understanding to design an adversarial attack that disrupts cluster structure in the output by moving as little as one point, see Figure \ref{fig:one_pt_perturb}.
+\pagebreak
+    \item \textbf{Misrepresentation of outliers}: We prove that, regardless of input, %structure, 
+    the resulting t-SNE output is incapable of depicting extreme outliers, in the sense of depicting one point as substantially far away from all the others, see Theorem \ref{thm:outlier_abs}. In practice, on both synthetic and real datasets, we observe a more concerning phenomenon that faraway outliers are often subsumed into the cluster structure of the bulk of points, see Figures \ref{fig:outliers1} and \ref{fig:outliers_real_world}. %We then show that, if the input to t-SNE consists of a mixture of Gaussians plus some number of extreme outliers, the output will depict these outliers as part of the Gaussians.
+\end{enumerate}
+
+%It is worth emphasizing that these behaviors are somewhat peculiar to t-SNE, UMAP, and related methods. 
+
+While there has been some work investigating the shortcomings of t-SNE in various practical settings (see Section \ref{sec:related_work_limitations} for a detailed discussion of the relevant literature), to the best of our knowledge this is the first work which theoretically analyzes some of the key limitations of t-SNE. 
+
