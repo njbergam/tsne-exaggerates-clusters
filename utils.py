@@ -176,10 +176,13 @@ def append_outliers(X, num_outliers, alpha):
 
 
 def add_poison(X, num_poisons, neighborhood_size=20):
-    """Add poison points at mean of random neighborhoods."""
+    """Add poison points: one poison uses the global mean; more use random neighborhoods."""
     for _ in range(num_poisons):
-        idx = np.random.choice(len(X), size=neighborhood_size, replace=False)
-        pt = np.mean(X[idx], axis=0, keepdims=True)
+        if num_poisons == 1:
+            pt = np.mean(X, axis=0, keepdims=True)
+        else:
+            idx = np.random.choice(len(X), size=neighborhood_size, replace=False)
+            pt = np.mean(X[idx], axis=0, keepdims=True)
         X = np.concatenate((X, pt), axis=0)
     return X
 
